@@ -1,20 +1,20 @@
 SmoothControls - REAL SMOOOOTH
 ==============
 
-Camera controls for threejs - Pointerlock with y axis. This is a first person perspective camera control... where you look is where you move to.
+Camera controls for threejs - Copy of Pointerlock with y axis. This is a first person perspective camera control... where you look is where you move to. Use keyboard and mouse to manipulate the camera:
 
-Use keyboard and mouse to manipulate the camera:
-
+```
 W=move forward
 A=move left
 S=move back
 D=move right
-Mouse move= adjust relative yaw and pitch of camera
-
+R=move up
+F=move down
+Mouse move=adjust relative yaw and pitch of camera
+```
 
 
 ```
-...
 var clock = new THREE.Clock();
 var controls = this.controls = new THREE.SmoothControls( camera );
 controls.enabled = false;
