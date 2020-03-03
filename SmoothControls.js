@@ -11,7 +11,7 @@ THREE.SmoothControls = function ( object ) {
     this.moveLeft = false;
     this.moveRight = false;
     this.object = object;
-    this.target = new THREE.Vector3( 0, 0, 0 );
+    this.target = new THREE.Vector3(0, 0, 0);
     this.movementX = 0;
     this.movementY = 0;
     this.lat = 0;
@@ -19,60 +19,68 @@ THREE.SmoothControls = function ( object ) {
     this.phi = 0;
     this.theta = 0;
 
-    this.update = function( delta ) {
+    this.update = function (delta) {
 
-        if ( !this.enabled ) {
+        if (!this.enabled) {
             return;
         }
 
         var actualMoveSpeed = delta * this.movementSpeed;
         var actualLookSpeed = delta * this.lookSpeed;
 
-        if ( this.moveForward  ) this.object.translateZ( - ( actualMoveSpeed ) );
-        if ( this.moveBackward ) this.object.translateZ( actualMoveSpeed );
+        if (this.moveForward) this.object.translateZ(-(actualMoveSpeed));
+        if (this.moveBackward) this.object.translateZ(actualMoveSpeed);
 
-        if ( this.moveLeft ) this.object.translateX( - actualMoveSpeed );
-        if ( this.moveRight ) this.object.translateX( actualMoveSpeed );
+        if (this.moveLeft) this.object.translateX(-actualMoveSpeed);
+        if (this.moveRight) this.object.translateX(actualMoveSpeed);
 
-        if ( this.moveUp ) this.object.translateY( actualMoveSpeed );
-        if ( this.moveDown ) this.object.translateY( - actualMoveSpeed );
+        if (this.moveUp) this.object.translateY(actualMoveSpeed);
+        if (this.moveDown) this.object.translateY(-actualMoveSpeed);
 
-        this.lon += (20* this.movementX) * actualLookSpeed;
-        this.lat -= (20* this.movementY) * actualLookSpeed;// * verticalLookRatio;
+        this.lon += (20 * this.movementX) * actualLookSpeed;
+        this.lat -= (20 * this.movementY) * actualLookSpeed;// * verticalLookRatio;
         this.movementX = 0;
         this.movementY = 0;
 
-        this.lat = Math.max( - 85, Math.min( 85, this.lat ) );
-        this.phi = ( 90 - this.lat ) * Math.PI / 180;
+        this.lat = Math.max(-85, Math.min(85, this.lat));
+        this.phi = (90 - this.lat) * Math.PI / 180;
         this.theta = this.lon * Math.PI / 180;
 
-        this.target.x = this.object.position.x + 100 * Math.sin( this.phi ) * Math.cos( this.theta );
-        this.target.y = this.object.position.y + 100 * Math.cos( this.phi );
-        this.target.z = this.object.position.z + 100 * Math.sin( this.phi ) * Math.sin( this.theta );
+        this.target.x = this.object.position.x + 100 * Math.sin(this.phi) * Math.cos(this.theta);
+        this.target.y = this.object.position.y + 100 * Math.cos(this.phi);
+        this.target.z = this.object.position.z + 100 * Math.sin(this.phi) * Math.sin(this.theta);
 
-        this.object.lookAt( this.target );
+        this.object.lookAt(this.target);
     };
 
-    this.onMouseMove = function ( event ) {
+    this.onMouseMove = function (event) {
         this.movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
         this.movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
     };
 
-    this.onMouseDown = function ( event ) {
+    this.onMouseDown = function (event) {
         event.preventDefault();
         event.stopPropagation();
-        switch ( event.button ) {
-            case 0: this.moveForward = true; break;
-            case 2: this.moveBackward = true; break;
+        switch (event.button) {
+            case 0:
+                this.moveForward = true;
+                break;
+            case 2:
+                this.moveBackward = true;
+                break;
         }
     };
 
-    this.onMouseUp = function ( event ) {
+    this.onMouseUp = function (event) {
         event.preventDefault();
         event.stopPropagation();
-        switch ( event.button ) {
-            case 0: this.moveForward = false; break;
-            case 2: this.moveBackward = false; break;
+        switch (event.button) {
+            case 0:
+                this.moveForward = false;
+                break;
+            case 2:
+                this.moveBackward = false;
+                break;
         }
     };
 
@@ -122,5 +130,4 @@ THREE.SmoothControls = function ( object ) {
     document.addEventListener( 'mouseup', this.onMouseUp.bind(this), false );
     document.addEventListener( 'keydown', this.onKeyDown.bind(this), false );
     document.addEventListener( 'keyup', this.onKeyUp.bind(this), false );
-
 };
