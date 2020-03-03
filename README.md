@@ -15,7 +15,7 @@ Mouse move = adjust relative yaw and pitch of camera
 # EXAMPLE IMPLEMENTATION
 ```
 var clock = new THREE.Clock();
-var controls = this.controls = new THREE.SmoothControls( camera );
+var controls = this.controls = new THREE.SmoothControls(camera);
 controls.enabled = false;
 controls.movementSpeed = 1000;
 controls.lookSpeed = 0.125;
@@ -24,7 +24,7 @@ controls.lookSpeed = 0.125;
 
 animate: function(){
     ...
-    this.controls.update( clock.getDelta() );
+    this.controls.update(clock.getDelta());
     ...
 }
 ```
