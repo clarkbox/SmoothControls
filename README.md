@@ -28,3 +28,5 @@ animate: function(){
     ...
 }
 ```
+
+Please report any bugs found to the issue tracker.
