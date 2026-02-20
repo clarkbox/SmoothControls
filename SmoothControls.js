@@ -124,10 +124,26 @@ THREE.SmoothControls = function ( object ) {
         }
     };
 
-    document.addEventListener( 'contextmenu', function ( event ) { event.preventDefault(); }, false );
-    document.addEventListener( 'mousemove', this.onMouseMove.bind(this), false );
-    document.addEventListener( 'mousedown', this.onMouseDown.bind(this), false );
-    document.addEventListener( 'mouseup', this.onMouseUp.bind(this), false );
-    document.addEventListener( 'keydown', this.onKeyDown.bind(this), false );
-    document.addEventListener( 'keyup', this.onKeyUp.bind(this), false );
+    this._onContextMenu = function ( event ) { event.preventDefault(); };
+    this._onMouseMove = this.onMouseMove.bind(this);
+    this._onMouseDown = this.onMouseDown.bind(this);
+    this._onMouseUp = this.onMouseUp.bind(this);
+    this._onKeyDown = this.onKeyDown.bind(this);
+    this._onKeyUp = this.onKeyUp.bind(this);
+
+    document.addEventListener( 'contextmenu', this._onContextMenu, false );
+    document.addEventListener( 'mousemove', this._onMouseMove, false );
+    document.addEventListener( 'mousedown', this._onMouseDown, false );
+    document.addEventListener( 'mouseup', this._onMouseUp, false );
+    document.addEventListener( 'keydown', this._onKeyDown, false );
+    document.addEventListener( 'keyup', this._onKeyUp, false );
+
+    this.dispose = function () {
+        document.removeEventListener( 'contextmenu', this._onContextMenu, false );
+        document.removeEventListener( 'mousemove', this._onMouseMove, false );
+        document.removeEventListener( 'mousedown', this._onMouseDown, false );
+        document.removeEventListener( 'mouseup', this._onMouseUp, false );
+        document.removeEventListener( 'keydown', this._onKeyDown, false );
+        document.removeEventListener( 'keyup', this._onKeyUp, false );
+    };
 };
