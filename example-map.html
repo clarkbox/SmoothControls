@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>MapSmoothControls - Example</title>
+		<meta charset="utf-8">
+		<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23111822'/%3E%3C/svg%3E">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				margin: 0;
+				overflow: hidden;
+				background-color: #111111;
+				touch-action: none;
+			}
+
+			#help {
+				position: absolute;
+				left: 16px;
+				bottom: 16px;
+				max-width: 320px;
+				padding: 12px 14px;
+				border-radius: 8px;
+				background: rgba(0, 0, 0, 0.55);
+				color: #ffffff;
+				font-family: Arial, Helvetica, sans-serif;
+				font-size: 13px;
+				line-height: 1.45;
+				pointer-events: none;
+			}
+
+			#help strong {
+				display: block;
+				margin-bottom: 6px;
+				font-size: 15px;
+			}
+		</style>
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js"
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="help">
+			<strong>Maps camera</strong>
+			Left drag: pan the ground point under the cursor<br>
+			Right drag, middle drag, or Ctrl/Shift + left: orbit<br>
+			Wheel: zoom toward the cursor<br>
+			WASD / arrows: pan &nbsp; Q / E: yaw<br>
+			R / F or + / −: zoom
+		</div>
+		<script type="module">
+			import {
+				AmbientLight,
+				BoxGeometry,
+				Color,
+				DirectionalLight,
+				GridHelper,
+				Mesh,
+				MeshLambertMaterial,
+				PerspectiveCamera,
+				Scene,
+				WebGLRenderer,
+			} from 'three';
+			import { SmoothControls } from './MapSmoothControls.js';
+
+			const scene = new Scene();
+			scene.background = new Color(0x87a0b5);
+
+			const camera = new PerspectiveCamera(62, 1, 0.1, 2000);
+			camera.position.set(0, 10, 20);
+
+			scene.add(new AmbientLight(0xffffff, 0.65));
+			const sun = new DirectionalLight(0xffffff, 1.1);
+			sun.position.set(30, 50, 20);
+			scene.add(sun);
+
+			const grid = new GridHelper(80, 40, 0x445566, 0x2a3644);
+			scene.add(grid);
+
+			const boxGeometry = new BoxGeometry(1.2, 1.2, 1.2);
+			const spots = [
+				[0, 0xffcc66],
+				[6, 0x66ccff],
+				[-5, 0xff6688],
+				[3, 0x88dd88],
+				[-8, 0xddaaee],
+			];
+			for (let i = 0; i < spots.length; i += 1) {
+				const mesh = new Mesh(
+					boxGeometry,
+					new MeshLambertMaterial({ color: spots[i][1] })
+				);
+				mesh.position.set(spots[i][0], 0.6, (i - 2) * 3);
+				scene.add(mesh);
+			}
+
+			const renderer = new WebGLRenderer({ antialias: true });
+			renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+			document.body.appendChild(renderer.domElement);
+
+			const controls = new SmoothControls(camera, renderer.domElement);
+			controls.movementSpeed = 14;
+
+			function resize() {
+				const width = window.innerWidth;
+				const height = window.innerHeight;
+				camera.aspect = width / Math.max(height, 1);
+				camera.updateProjectionMatrix();
+				renderer.setSize(width, height);
+			}
+
+			window.addEventListener('resize', resize);
+			resize();
+
+			let last = performance.now();
+			function frame(now) {
+				requestAnimationFrame(frame);
+				const dt = Math.min((now - last) / 1000, 0.05);
+				last = now;
+				controls.update(dt);
+				renderer.render(scene, camera);
+				if (document.body.dataset.ready !== '1') {
+					document.body.dataset.ready = '1';
+				}
+			}
+
+			requestAnimationFrame(frame);
+		</script>
+	</body>
+</html>
